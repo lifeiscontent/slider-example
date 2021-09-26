@@ -1,25 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import "./App.css";
+import { UntrustedSlider } from "./components/UntrustedSlider";
+import { ValueChangeSlider } from "./components/ValueChangeSlider";
 
 function App() {
+  const [value, setValue] = React.useState("500000");
+
+  const handleUntrustedChange: React.ChangeEventHandler<HTMLInputElement> =
+    React.useCallback((event) => {
+      setValue(event.currentTarget.value);
+    }, []);
+
+  const formatValueText = React.useCallback(
+    (value: number) =>
+      new Intl.NumberFormat(undefined, {
+        style: "currency",
+        currency: "USD",
+        maximumFractionDigits: 0,
+      }).format(value),
+    []
+  );
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <React.Fragment>
+      <div>
+        <UntrustedSlider
+          formatValueText={formatValueText}
+          min="0"
+          max="1000000"
+          step="100000"
+          value={value}
+          onChange={handleUntrustedChange}
+        />
+      </div>
+      <div>
+        <ValueChangeSlider
+          formatValueText={formatValueText}
+          max="1000000"
+          min="0"
+          onChange={setValue}
+          step="100000"
+          value={value}
+        />
+      </div>
+    </React.Fragment>
   );
 }
 
